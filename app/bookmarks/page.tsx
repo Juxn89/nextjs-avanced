@@ -1,12 +1,20 @@
 import { Heading, Text } from "@chakra-ui/react"
 
 import { Bookmark } from "@/components/bookmark"
-import { BookmarkType } from './schema';
+// import { BookmarkType } from './schema';
+import { orm } from "./db";
 
 export default async function Bookmarks() {
 
-  const bookmarksResponse = await fetch("http://localhost:3000/bookmarks/api", {next: { tags: ["bookmarks"] }})
-  const bookmarks = await bookmarksResponse.json() as { data: BookmarkType[] }
+  // const bookmarksResponse = await fetch("http://localhost:3000/bookmarks/api", {next: { tags: ["bookmarks"] }})
+  // const bookmarks = await bookmarksResponse.json() as { data: BookmarkType[] }
+
+  const bookmarks = await orm.query.bookmarks.findMany({
+    limit: 10,
+    with: {
+      author: true,
+    },
+  })
 
   return (
     <main className="mt-12">
